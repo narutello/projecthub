@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useLocale } from "@/components/locale-provider";
 import { adminLoginFn } from "@/lib/fns";
 
-export function LoginForm({ preview }: { preview: boolean }) {
+export function LoginForm() {
   const { t } = useLocale();
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -68,11 +68,6 @@ export function LoginForm({ preview }: { preview: boolean }) {
           <Button type="submit" disabled={pending}>
             {pending ? t.admin.signingIn : t.admin.signIn}
           </Button>
-          {preview ? (
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              {t.admin.previewHint}
-            </p>
-          ) : null}
         </div>
       </form>
     </div>

@@ -9,7 +9,6 @@ import {
   adminLogoutFn,
   adminStatsFn,
   getAdminSessionFn,
-  getLoginMetaFn,
   listProjectsFn,
 } from "@/lib/fns";
 
@@ -17,10 +16,8 @@ export const Route = createFileRoute("/admin")({
   loader: async () => {
     const session = await getAdminSessionFn();
     if (!session) {
-      const meta = await getLoginMetaFn();
       return {
         session: null as null,
-        meta,
         projects: null as null,
         stats: null as null,
       };
@@ -28,7 +25,6 @@ export const Route = createFileRoute("/admin")({
     const [projects, stats] = await Promise.all([listProjectsFn(), adminStatsFn()]);
     return {
       session,
-      meta: null as null,
       projects,
       stats,
     };
@@ -60,7 +56,7 @@ function AdminPage() {
             <AdminDashboard projects={data.projects} stats={data.stats} />
           </>
         ) : (
-          <LoginForm preview={Boolean(data.meta?.preview)} />
+          <LoginForm />
         )}
       </main>
       <SiteFooter />
