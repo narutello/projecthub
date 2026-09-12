@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { ArrowDown, ArrowUp, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,6 +40,7 @@ export function AdminDashboard({
 }) {
   const { locale, t } = useLocale();
   const router = useRouter();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [pendingId, setPendingId] = useState<number | null>(null);
 
@@ -84,11 +85,9 @@ export function AdminDashboard({
           <h1 className="font-display text-3xl sm:text-4xl">{t.admin.dashboard}</h1>
           <p className="mt-2 text-sm text-muted-foreground">{t.admin.emptyBody}</p>
         </div>
-        <Button asChild>
-          <Link to="/admin/new">
-            <Plus className="size-4" />
-            {t.admin.addProject}
-          </Link>
+        <Button type="button" onClick={() => navigate({ to: "/admin/new" })}>
+          <Plus className="size-4" />
+          {t.admin.addProject}
         </Button>
       </div>
 
@@ -196,10 +195,16 @@ export function AdminDashboard({
                   >
                     <ArrowDown className="size-4" />
                   </Button>
-                  <Button asChild variant="outline" size="icon" aria-label={t.common.edit}>
-                    <Link to="/admin/$id" params={{ id: String(project.id) }}>
-                      <Pencil className="size-4" />
-                    </Link>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    aria-label={t.common.edit}
+                    onClick={() =>
+                      navigate({ to: "/admin/edit/$id", params: { id: String(project.id) } })
+                    }
+                  >
+                    <Pencil className="size-4" />
                   </Button>
                   <Button
                     type="button"
