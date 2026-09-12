@@ -20,10 +20,10 @@ export function LoginForm() {
     setError("");
     try {
       await adminLoginFn({ data: { email, password } });
-      await router.invalidate();
+      // Full navigation so session cookie is applied cleanly on the next page.
+      window.location.assign("/admin");
     } catch {
       setError(t.admin.invalid);
-    } finally {
       setPending(false);
     }
   }

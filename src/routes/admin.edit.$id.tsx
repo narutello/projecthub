@@ -1,5 +1,6 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ProjectForm } from "@/components/admin/project-form";
+import { LoginForm } from "@/components/admin/login-form";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
@@ -10,25 +11,37 @@ export const Route = createFileRoute("/admin/edit/$id")({
   loader: async ({ params }) => {
     const session = await getAdminSessionFn();
     if (!session) {
-      throw redirect({ to: "/admin" });
+      return { session: null as null, project: null as null };
     }
     const id = Number(params.id);
     if (!Number.isFinite(id) || id <= 0) {
-      return { project: null as null };
+      return { session, project: null as null };
     }
     try {
       const project = await getProjectByIdFn({ data: { id } });
-      return { project };
+      return { session, project };
     } catch {
-      return { project: null as null };
+      return { session, project: null as null };
     }
   },
   component: AdminEditPage,
 });
 
 function AdminEditPage() {
-  const { project } = Route.useLoaderData();
+  const { session, project } = Route.useLoaderData();
   const { t } = useLocale();
+
+  if (!session) {
+    return (
+      <div className="flex min-h-dvh flex-col">
+        <SiteHeader admin />
+        <main className="flex-1">
+          <LoginForm />
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
 
   if (!project) {
     return (
